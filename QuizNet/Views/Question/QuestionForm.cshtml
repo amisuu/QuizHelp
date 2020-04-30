@@ -1,0 +1,50 @@
+﻿@model QuestionFormViewModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>@Model.ActionType</h1>
+
+<form method="post" asp-controller="Question" asp-action="Save">
+    <input asp-for="Question.Id" type="hidden" />
+    Question text:
+    <input class="form-control" asp-for="Question.Text" />
+    <span asp-validation-for="Question.Text" class="text-danger"></span>
+
+    Answer 1# <input class="form-control" asp-for="Question.Answers[0].Text" id="answer0"/><br />
+    <span asp-validation-for="Question.Answers[0].Text"></span>
+
+    Answer 2# <input class="form-control" asp-for="Question.Answers[1].Text" /><br />
+    <span asp-validation-for="Question.Answers[1].Text"></span>
+
+    Answer 3# <input class="form-control" asp-for="Question.Answers[2].Text" /><br />
+    <span asp-validation-for="Question.Answers[2].Text"></span>
+
+    Answer 4# <input class="form-control" asp-for="Question.Answers[3].Text" /><br />
+    <span asp-validation-for="Question.Answers[3].Text"></span>
+
+    <select class="custom-select" asp-for="CorrectAnswerIndex">
+        <option value="0"  id="0"selected> 1#</option>
+        <option value="1"> 2#</option>
+        <option value="2"> 3#</option>
+        <option value="3"> 4#</option>
+    </select>
+    <button class="btn btn-primary btn-block" type="submit">@Model.ActionType</button>
+
+</form>
+
+@section Scripts{ 
+    
+    <script>
+        $(document).ready(function() {
+            $("#answer0").on("input",
+                function(event) {
+                    var enteredText = event.target.value;
+
+                    $("#0").html(enteredText);
+                });
+        });
+    </script>
+
+    
+}
