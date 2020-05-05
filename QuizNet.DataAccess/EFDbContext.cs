@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using QuizNet.DataAccess.Models;
 
 namespace QuizNet.DataAccess
 {
-    public class EFDbContext : DbContext
+    public class EFDbContext : IdentityDbContext
     {
         public DbSet<Question> Questions { get; set; }
         public DbSet<Answer> Answers { get; set; }
