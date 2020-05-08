@@ -1,0 +1,35 @@
+﻿@model IEnumerable<QuizNet.DataAccess.Models.Image>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h4 class="text-center text-uppercase">List of employee</h4>
+
+<p>
+    <a asp-action="New" class="btn btn-sm btn-primary rounded-0 text-uppercase"><i class="fas fa-plus-circle"></i> Add New</a>
+</p>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Title)</th>
+            <th>@Html.DisplayNameFor(model => model.ImageDescription)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var imageVM in Model)
+        {
+            <tr>
+                <td>
+                    <img src="~/images/@imageVM.ImageProfile"
+                         class="rounded-circle"
+                         height="40" width="40"
+                         asp-append-version="true" />s
+                </td>
+                <td>@imageVM.Title</td>
+                <td>@imageVM.ImageDescription</td>
+            </tr>
+
+        }
+    </tbody>
+</table>

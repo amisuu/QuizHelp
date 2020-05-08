@@ -11,6 +11,7 @@ namespace QuizNet.DataAccess
     {
         public DbSet<Question> Questions { get; set; }
         public DbSet<Answer> Answers { get; set; }
+        public DbSet<Image> Images { get; set; }
 
         public EFDbContext(DbContextOptions<EFDbContext> options) : base(options)
         {

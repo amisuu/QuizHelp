@@ -8,6 +8,11 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Hosting;
+using System.Threading.Tasks;
+using QuizNet.DataAccess;
+using System.IO;
+using Microsoft.EntityFrameworkCore;
 
 namespace QuizNet.Controllers
 {
@@ -16,16 +21,22 @@ namespace QuizNet.Controllers
 
         private readonly ILogger<HomeController> _logger;
         private readonly IMemoryCache _cache;
+        private readonly IHostEnvironment _hostEnv;
+        private readonly EFDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger, IMemoryCache cache)
+        public HomeController(ILogger<HomeController> logger, 
+            IMemoryCache cache,
+            IHostEnvironment hostEnv,
+            EFDbContext context)
         {
             _logger = logger;
             _cache = cache;
+            _hostEnv = hostEnv;
+            _context = context;
         }
 
         public IActionResult Index()
         {
-
             return View();
         }
 
@@ -58,6 +69,51 @@ namespace QuizNet.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        
+        public async Task<IActionResult> NewFileHelper()
+        {
+            var images = await _context.Images.ToListAsync();
+            return View(images);
+        }
+
+        public IActionResult NewFile()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> NewFile(ImageViewModel imageVM)
+        {
+            if (ModelState.IsValid)
+            {
+                string uniqueFileName = UploadedFile(imageVM);
+
+                Image image = new Image
+                {
+                    Title = imageVM.Title,
+                    ImageDescription = imageVM.ImageDescription,
+                };
+                _context.Add(image);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("NewFileHelper");
+            }
+            return View();
+        }
+
+        private string UploadedFile(ImageViewModel imageVM)
+        {
+            string uniqueFileName = null;
+            if (uniqueFileName != null)
+            {
+                string uploadFolder = Path.Combine(_hostEnv.ContentRootPath, "images");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + imageVM.ImageProfile.FileName;
+                string filePath = Path.Combine(uploadFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath,FileMode.Create))
+                {
+                    imageVM.ImageProfile.CopyTo(fileStream);
+                }
+            }
+            return uniqueFileName;
+        }
     }
 }

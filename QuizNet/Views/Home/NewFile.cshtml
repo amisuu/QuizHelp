@@ -1,0 +1,55 @@
+﻿@model QuizNet.Models.ImageViewModel
+
+@{
+    ViewData["Title"] = "NewFile";
+}
+
+<div>
+    <div class="card">
+        <div class="card-header bg-primary text-uppercase">
+            <h4>Add new photo</h4>
+        </div>
+        <div class="card-body">
+            <form enctype="multipart/form-data" asp-action="NewFile">
+                <div class="row">
+                    <div>
+                        <label asp-for="Title" class="control-label"></label>
+                        <input asp-for="Title" class="form-control" />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="ImageDescription" class="control-label"></label>
+                        <input asp-for="ImageDescription" class="form-control" />
+                        <span asp-validation-for="ImageDescription" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="ImageProfile" class="control-label"></label>
+                        <div>
+                            <input asp-for="ImageProfile" class="custom-file-input" id="customFile" />
+                            <label class="custom-file-label" for="customFile">Choose file</label>
+                        </div>
+                        <span asp-validation-for="ImageProfile" class="text-danger"></span>
+                    </div>
+                </div>
+                <div>
+                    <input type="submit" value="submit" class="btn btn-primary rounded-0" />
+                    <a asp-action="NewFileHelper" class="btn btn-sm btn-primary rounded-0">
+                        <i class="fas fa-fast-backward">Back To List</i>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+
+        // Add the following code if you want the name of the file appear on select
+        $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+    </script>
+}
+
